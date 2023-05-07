@@ -3,18 +3,23 @@
 # AWS Lambda Resources
 ##
 
-data "archive_file" "python_lambda_package" {  
-  type = "zip"  
-  source_file = "${path.module}/python/lambda_function.py" 
-  output_path = "lambda.zip"
+data "archive_file" "dummy" {
+  type = "zip"
+  output_path = "${path.module}/lambda_dummy_package.zip"
+  source {
+      content  = "hello"
+      filename = "dummy.text"
+  }
 }
 
-resource "aws_lambda_function" "chatgptt" {
-        function_name = "chatgptt-lambda"
-        filename      = "lambda.zip"
-        source_code_hash = data.archive_file.python_lambda_package.output_base64sha256
-        role          = aws_iam_role.lambda_role.arn
-        runtime       = "python3.6"
-        handler       = "lambda_function.lambda_handler"
-        timeout       = 60
+resource "aws_lambda_function" "chatgpt" {
+  function_name = "${var.function_name}"
+  filename      = "${data.archive_file.dummy.output_path}"
+  description = "Process interaction between ChatGPT and Telegram."
+  handler = "lambda_function.lambda.lambda_handler"
+  runtime = "python3.10"
+
+  role = aws_iam_role.lambda_exec_role.arn
+  memory_size = 128
+  timeout = 300
 }
