@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Depedencies
         run: |
-          pip install -r lambda_function/requirements.txt
+          pip install -r ./lambda_function/requirements.txt
           
       - name: Run Unit Tests
         run: |
