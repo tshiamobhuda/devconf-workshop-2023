@@ -15,7 +15,7 @@ jobs:
       - name: Setup Virtual Environment
         run: |
           python3 -m pip install --user virtualenv
-          virtualenv -t "python3.11" env_unit_tests
+          virtualenv env_unit_tests
           source ./env_unit_tests/bin/activate
 
       - name: Install Depedencies
