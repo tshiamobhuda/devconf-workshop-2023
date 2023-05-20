@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           ls -lh
-          pip install -r ./lambda_function/requirements.txt
+          pip install -r ./aws-chatgpt-telegram/lambda_function/requirements.txt
           
       - name: Run Unit Tests
         run: |
