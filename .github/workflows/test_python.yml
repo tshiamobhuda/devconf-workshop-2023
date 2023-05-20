@@ -1,0 +1,22 @@
+name: Python Test
+on: [workflow_dispatch]
+jobs:
+  unit_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Virtual Environment
+        run: |
+          # Create and activate virtual environment.
+          virtualenv -t "python3.11" env_unit_tests
+          source ./env_unit_tests/bin/activate
+
+      - name: Install Depedencies
+        run: |
+          pip install -r lambda_function/requirements.txt
+          
+      - name: Run Unit Tests
+        run: |
+          python lambda_function/unittests.py

@@ -16,10 +16,15 @@ resource "aws_lambda_function" "chatgpt" {
   function_name = "${var.function_name}"
   filename      = "${data.archive_file.dummy.output_path}"
   description = "Process interaction between ChatGPT and Telegram."
-  handler = "lambda_function.lambda.lambda_handler"
+  handler = "lambda_function.lambda.message_handler"
   runtime = "python3.10"
 
   role = aws_iam_role.lambda_exec_role.arn
   memory_size = 128
   timeout = 300
+}
+
+resource "aws_lambda_function_url" "chatgpt" {
+  function_name      = aws_lambda_function.test.function_name
+  authorization_type = "NONE"
 }
