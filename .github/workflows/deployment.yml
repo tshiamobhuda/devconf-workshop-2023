@@ -3,7 +3,6 @@ name: Full Deployment
 on: [workflow_dispatch]
 
 env:
-  py_version: '3.9'
   aws_region: af-south-1
 
 jobs:
