@@ -3,7 +3,7 @@
 # Will output any information required from the deployment of the AWS resources.
 ##
 
-output "example" {
-    value = var.example
-    description = "An example output."
+output "lambda_name" {
+    value = module.chatgpt-telegram.lambda_name
+    description = chatgpt-telegram
 }

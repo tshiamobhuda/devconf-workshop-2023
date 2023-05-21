@@ -1,0 +1,58 @@
+name: Full Deployment
+
+on: [workflow_dispatch]
+
+env:
+  py_version: '3.9'
+  aws_region: af-south-1
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ env.aws_region }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        lambda_function_name: "chatgpt_telegram"
+
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Apply
+      run: terraform apply
+
+    - name: Terraform Outputs
+      run: |
+        lambda_name=$(terraform output -raw lambda_name)
+        echo "lambda_function_name=$lambda_name)" >> $GITHUB_ENV
+
+    - name: Python Tests
+      uses: ./.github/workflows/test_python.yml
+      secrets: inherit
+
+    - name: Python Packaging and Deployment
+      uses: ./.github/workflows/package_python.yml
+      secrets: inherit
+      with:
+        lambda_function_name: ${{ env.lambda_function_name }}

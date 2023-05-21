@@ -5,4 +5,5 @@
 
 output "lambda_name" {
     value = aws_lambda_function.chatgpt.function_name
+    description = "Created Lambda name"
 }
