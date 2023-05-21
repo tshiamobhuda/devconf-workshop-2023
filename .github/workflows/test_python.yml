@@ -25,5 +25,8 @@ jobs:
           
       - name: Run Unit Tests
         run: |
+          TELEGRAM_TOKEN="${{ secret.TELEGRAM_TOKEN }}"
+          OPENAI_API_KEY="${{ secret.OPENAI_API_KEY }}"
+          TELEGRAM_SECRET_TOKEN="${{ secret.OPENAI_API_KEY }}"
           python unittests.py
         working-directory: ./aws-chatgpt-telegram/lambda_function/
