@@ -1,5 +1,7 @@
 name: Python Packaging
 on: [workflow_dispatch]
+env:
+  py_version: '3.9'
 jobs:
   unit_test:
     runs-on: ubuntu-latest
@@ -10,12 +12,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ env.py_version }}
 
       - name: Package Python
         run: |
-          echo "Package creation."
-
           # Create the packaging directory.
           dir_name=lambda_dist_pkg/
           mkdir $dir_name
@@ -35,7 +35,7 @@ jobs:
 
           # Create deployment package.
           echo "Creating deployment package."
-          cp -r env_$function_name/lib/$runtime/site-packages/. ./$dir_name
+          cp -r env_$function_name/lib/${{ env.py_version }}/site-packages/. ./$dir_name
           cp -r ./lambda_function/ ./$dir_name
           zip -r $function_name.zip ./$dir_name
 
