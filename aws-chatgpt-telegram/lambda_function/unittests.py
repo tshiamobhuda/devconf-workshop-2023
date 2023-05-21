@@ -1,4 +1,5 @@
 import unittest
+import os
 from unittest.mock import MagicMock, patch
 from app import (
     ask_chatgpt,
