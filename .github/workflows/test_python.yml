@@ -25,7 +25,7 @@ jobs:
           
       - name: Run Unit Tests
         run: |
-          python unittests.py
+          $ python -m unittest app.py
         working-directory: ./aws-chatgpt-telegram/lambda_function/
         env:
           TELEGRAM_TOKEN: "${{ secrets.TELEGRAM_TOKEN }}"
