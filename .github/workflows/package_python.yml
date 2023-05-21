@@ -1,11 +1,33 @@
-name: Python Packaging
-on: [workflow_dispatch]
+name: Python Packaging and Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      lambda_function_name:
+      required: true
+      type: string
+      default: "chatgpt_telegram"
+  workflow_call:
+    inputs:
+      lambda_function_name:
+        required: true
+        type: string
+
 env:
   py_version: '3.9'
+  aws_region: af-south-1
+
 jobs:
-  unit_test:
+  packaging_and_deployment:
     runs-on: ubuntu-latest
     steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ env.aws_region }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Clone Repository
         uses: actions/checkout@v3
 
@@ -21,7 +43,7 @@ jobs:
           mkdir $dir_name
 
           # Set up some variables and environment for the packaging.
-          function_name="chatgpt_telegram_package"
+          function_name="${{ inputs.lambda_function_name }}"
 
           python3 -m pip install --user virtualenv
           virtualenv env_$function_name
@@ -49,3 +71,8 @@ jobs:
           TELEGRAM_TOKEN: "${{ secrets.TELEGRAM_TOKEN }}"
           OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
           TELEGRAM_SECRET_TOKEN: "${{ secrets.OPENAI_API_KEY }}"
+
+      - name: Python Deployment
+        run: |
+          function_name="${{ inputs.lambda_function_name }}"
+          aws lambda update-function-code --function-name $function_name --zip-file fileb://$function_name.zip
