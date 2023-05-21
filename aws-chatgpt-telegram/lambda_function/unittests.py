@@ -1,23 +1,64 @@
 import unittest
-from unittest.mock import patch, MagicMock
+import os
+from unittest.mock import Mock, patch
 
-from app import process_message
+from app import (
+    authenticate_secret_token,
+    process_message,
+    process_voice_message,
+)
+
+# Telegram token
+TO_TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+FROM_TELEGRAM_TOKEN = os.environ["TELEGRAM_SECRET_TOKEN"]
+
+# Open API Token
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 
-class TestTelegramHandlers(unittest.TestCase):
-    @patch('your_module_name.ask_chatgpt')
-    def test_process_message(self, mock_ask_chatgpt):
-        # Mock the ask_chatgpt function
-        mock_ask_chatgpt.return_value = "Response from ChatGPT"
+class YourTestCase(unittest.TestCase):
+    def test_authenticate_secret_token(self):
+        # Test with valid secret token
+        valid_token = FROM_TELEGRAM_TOKEN
+        self.assertTrue(authenticate_secret_token(valid_token))
 
-        # Create a fake update object
-        update = MagicMock()
-        update.message.chat_id = 123456789
-        update.message.text = "Hello, ChatGPT!"
+        # Test with invalid secret token
+        invalid_token = "invalid_token"
+        self.assertFalse(authenticate_secret_token(invalid_token))
 
-        # Create a fake context object
-        context = MagicMock()
-        context.bot.send_message.return_value = None
+    def test_process_message(self):
+        # Mock the necessary objects
+        mock_update = Mock()
+        mock_context = Mock()
 
-        # Call the function to be tested
-        process_message
+        # Test the process_message function
+        with patch("app.ask_chatgpt") as mock_ask_chatgpt:
+            mock_ask_chatgpt.return_value = "Mock response"
+            process_message(mock_update, mock_context)
+
+            # Assert the expected behavior
+            mock_ask_chatgpt.assert_called_once_with(mock_update.message.text)
+            mock_context.bot.send_message.assert_called_once_with(
+                chat_id=mock_update.message.chat_id,
+                text="Mock response",
+                parse_mode="Markdown",
+            )
+
+    def test_process_voice_message(self):
+        # Mock the necessary objects
+        mock_update = Mock()
+        mock_context = Mock()
+
+        # Test the process_voice_message function
+        process_voice_message(mock_update, mock_context)
+
+        # Assert the expected behavior
+        mock_context.bot.send_message.assert_called_once_with(
+            chat_id=mock_update.message.chat_id,
+            text="Voice Messages are currently not supported.",
+            parse_mode="Markdown",
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

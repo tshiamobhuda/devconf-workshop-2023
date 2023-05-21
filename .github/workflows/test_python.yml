@@ -5,18 +5,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
       - name: Setup Virtual Environment
         run: |
-          # Create and activate virtual environment.
-          virtualenv -t "python3.11" env_unit_tests
+          python3 -m pip install --user virtualenv
+          virtualenv env_unit_tests
           source ./env_unit_tests/bin/activate
 
-      - name: Install Depedencies
+      - name: Install Dependencies
         run: |
-          pip install -r lambda_function/requirements.txt
+          ls -lh
+          pip install -r ./aws-chatgpt-telegram/lambda_function/requirements.txt
           
       - name: Run Unit Tests
         run: |
-          python lambda_function/unittests.py
+          python -m unittest unittests.py
+        working-directory: ./aws-chatgpt-telegram/lambda_function/
+        env:
+          TELEGRAM_TOKEN: "${{ secrets.TELEGRAM_TOKEN }}"
+          OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+          TELEGRAM_SECRET_TOKEN: "${{ secrets.OPENAI_API_KEY }}"

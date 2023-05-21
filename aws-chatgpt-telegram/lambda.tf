@@ -16,7 +16,7 @@ resource "aws_lambda_function" "chatgpt" {
   function_name = "${var.function_name}"
   filename      = "${data.archive_file.dummy.output_path}"
   description = "Process interaction between ChatGPT and Telegram."
-  handler = "lambda_function.lambda.message_handler"
+  handler = "app.message_handler"
   runtime = "python3.10"
 
   role = aws_iam_role.lambda_exec_role.arn
