@@ -19,7 +19,7 @@ OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 class YourTestCase(unittest.TestCase):
     def test_authenticate_secret_token(self):
         # Test with valid secret token
-        valid_token = "valid_token"
+        valid_token = FROM_TELEGRAM_TOKEN
         self.assertTrue(authenticate_secret_token(valid_token))
 
         # Test with invalid secret token

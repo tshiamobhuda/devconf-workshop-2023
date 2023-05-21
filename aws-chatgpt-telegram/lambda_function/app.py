@@ -26,7 +26,6 @@ dispatcher = Dispatcher(bot, None, use_context=True)
 
 # Authenticate Telegram secret token - X-Telegram-Bot-Api-Secret-Token
 def authenticate_secret_token(secret_token):
-    print(secret_token)
     if secret_token == FROM_TELEGRAM_TOKEN:
         return True
     else:
