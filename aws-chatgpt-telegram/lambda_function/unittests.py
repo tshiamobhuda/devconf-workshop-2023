@@ -8,6 +8,12 @@ from app import (
     message_handler,
 )
 
+# Telegram token
+TO_TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+FROM_TELEGRAM_TOKEN = os.environ["TELEGRAM_SECRET_TOKEN"]
+
+# Open API Token
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 class AppTests(unittest.TestCase):
     def test_ask_chatgpt(self):
@@ -47,7 +53,7 @@ class AppTests(unittest.TestCase):
 
     def test_authenticate_secret_token(self):
         # Test with a valid secret token
-        self.assertTrue(authenticate_secret_token("valid_secret_token"))
+        self.assertTrue(authenticate_secret_token(FROM_TELEGRAM_TOKEN))
 
         # Test with an invalid secret token
         self.assertFalse(authenticate_secret_token("invalid_secret_token"))
@@ -61,7 +67,7 @@ class AppTests(unittest.TestCase):
                 mock_authenticate.return_value = True
                 event = {
                     "headers": {
-                        "X-Telegram-Bot-Api-Secret-Token": "valid_secret_token"
+                        "X-Telegram-Bot-Api-Secret-Token": FROM_TELEGRAM_TOKEN
                     },
                     "body": "{}"
                 }
