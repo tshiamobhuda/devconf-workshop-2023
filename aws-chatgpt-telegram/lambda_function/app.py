@@ -76,12 +76,11 @@ def process_message(update, context):
             parse_mode=ParseMode.MARKDOWN,
         )
     else:
-        print("test")
-        # context.bot.send_message(
-        #     chat_id=chat_id,
-        #     text=message,
-        #     parse_mode=ParseMode.MARKDOWN,
-        # )
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message,
+            parse_mode=ParseMode.MARKDOWN,
+        )
 
 
 ############################

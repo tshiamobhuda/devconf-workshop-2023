@@ -5,7 +5,7 @@ from app import process_message
 
 
 class TestTelegramHandlers(unittest.TestCase):
-    @patch('your_module_name.ask_chatgpt')
+    @patch('app.ask_chatgpt')
     def test_process_message(self, mock_ask_chatgpt):
         # Mock the ask_chatgpt function
         mock_ask_chatgpt.return_value = "Response from ChatGPT"
