@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       lambda_function_name:
-      required: true
-      type: string
-      default: "chatgpt_telegram"
+        required: true
+        type: string
+        default: "chatgpt_telegram"
   workflow_call:
     inputs:
       lambda_function_name:
