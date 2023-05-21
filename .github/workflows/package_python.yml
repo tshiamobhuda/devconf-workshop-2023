@@ -28,7 +28,7 @@ jobs:
           source ./env_$function_name/bin/activate
 
           # Installing python dependencies.
-          pip install -r ./aws-chatgpt-telegram/lambda_function/requirements.txt
+          pip install -r ./lambda_function/requirements.txt
 
           # Deactivate virtual environment.
           deactivate
