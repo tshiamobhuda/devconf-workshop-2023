@@ -4,6 +4,6 @@
 
 module "chatgpt-telegram" {
     source = "./aws-chatgpt-telegram"
-    function_name = "chatgpt"
+    function_name = "chatgpt-telegram"
 }
 

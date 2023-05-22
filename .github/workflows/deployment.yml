@@ -12,10 +12,16 @@ jobs:
           aws-region: ${{ env.aws_region }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          lambda_function_name: "chatgpt_telegram"
 
       - name: Clone Repository
         uses: actions/checkout@v3
+
+      - name: Generate State File Name
+        run: |
+          random_string=$(openssl rand -base64 12 | tr --delete '/')
+          state_file_name="${{ inputs.account }}-$random_string"
+          echo $state_file_name
+          echo "STATEFILENAME=$state_file_name" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -31,7 +37,7 @@ jobs:
         id: init
         run: terraform init
         env:
-          TF_CLI_ARGS_init: "-backend-config='key=${{ env.lambda_function_name }}.tfstate'"
+          TF_CLI_ARGS_init: "-backend-config='key=${{ env.STATEFILENAME }}.tfstate'"
   
       - name: Terraform Validate
         id: validate
