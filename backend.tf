@@ -1,5 +1,5 @@
 terraform {
   backend "s3" {
-    bucket = "devconf-backend-configurations"
+    bucket = "devconf-backend-configurations-test"
   }
 }
