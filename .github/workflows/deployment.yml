@@ -51,7 +51,7 @@ jobs:
         run: |
           lambda_name=$(terraform output -raw lambda_name)
           echo "Lambda Name: $lambda_name"
-          echo "::set-output name=lambda_function_name::$lambda_name"
+          echo "lambda_function_name=$lambda_name" >> $GITHUB_OUTPUT
     outputs:
       lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
   python_tests:
