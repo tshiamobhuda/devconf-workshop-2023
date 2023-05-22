@@ -32,7 +32,7 @@ jobs:
         run: terraform init
         env:
           TF_CLI_ARGS_init: "-backend-config='key=${{ env.lambda_function_name }}.tfstate'"
-
+  
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
@@ -41,16 +41,20 @@ jobs:
         run: terraform apply
 
       - name: Terraform Outputs
+        id: lambda_output
         run: |
           lambda_name=$(terraform output -raw lambda_name)
           echo "lambda_function_name=$lambda_name)" >> $GITHUB_ENV
+          echo "lambda_function_name=$lambda_name)" >> "$GITHUB_OUTPUT"
 
-      - name: Python Tests
-        uses: ./.github/workflows/test_python.yml
-        secrets: inherit
+    python_tests:
+      runs-on: ubuntu-latest
+      uses: ./.github/workflows/test_python.yml
+      secrets: inherit
 
+    python_deployment:
       - name: Python Packaging and Deployment
         uses: ./.github/workflows/package_python.yml
         secrets: inherit
         with:
-          lambda_function_name: ${{ env.lambda_function_name }}
+          lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
