@@ -19,8 +19,8 @@ jobs:
       - name: Generate State File Name
         run: |
           random_string=$(openssl rand -base64 12 | tr --delete '/')
-          state_file_name="devconf-${random_string}.tfstate"
-          echo "State File Name: $state_file_name"
+          state_file_name="devconf-${random_string}"
+          echo "State File Name: $state_file_name.tfstate"
           echo "STATEFILENAME=$state_file_name" >> $GITHUB_ENV
 
       - name: Setup Terraform
