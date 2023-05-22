@@ -19,7 +19,7 @@ jobs:
       - name: Generate State File Name
         run: |
           random_string=$(openssl rand -base64 12 | tr --delete '/')
-          state_file_name="devconf-$random_string"
+          state_file_name="devconf-${random_string}.tfstate"
           echo "State File Name: $state_file_name"
           echo "STATEFILENAME=$state_file_name" >> $GITHUB_ENV
 
@@ -50,7 +50,8 @@ jobs:
         id: lambda_output
         run: |
           lambda_name=$(terraform output -raw lambda_name)
-          echo "lambda_function_name=$lambda_name" >> "$GITHUB_OUTPUT"
+          echo "Lambda Name: $lambda_name"
+          echo "::set-output name=lambda_function_name::$lambda_name"
     outputs:
       lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
   python_tests:
@@ -58,7 +59,7 @@ jobs:
     uses: ./.github/workflows/test_python.yml
     secrets: inherit
   python_deployment:
-    needs: [python_tests]
+    needs: [python_tests, terraform_deployment]
     uses: ./.github/workflows/package_python.yml
     secrets: inherit
     with:
