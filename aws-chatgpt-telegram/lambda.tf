@@ -25,6 +25,6 @@ resource "aws_lambda_function" "chatgpt" {
 }
 
 resource "aws_lambda_function_url" "chatgpt" {
-  function_name      = aws_lambda_function.test.function_name
+  function_name      = aws_lambda_function.chatgpt.function_name
   authorization_type = "NONE"
 }
