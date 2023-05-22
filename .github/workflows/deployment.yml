@@ -47,10 +47,12 @@ jobs:
           echo "lambda_function_name=$lambda_name)" >> $GITHUB_ENV
           echo "lambda_function_name=$lambda_name)" >> "$GITHUB_OUTPUT"
   python_tests:
+    needs: [terraform_deployment]
     uses: ./.github/workflows/test_python.yml
     secrets: inherit
   python_deployment:
+   needs: [python_tests]
     uses: ./.github/workflows/package_python.yml
     secrets: inherit
     with:
-      lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
+      lambda_function_name: ${{ steps.terraform_deployment.outputs.lambda_function_name }}
