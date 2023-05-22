@@ -44,13 +44,12 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Apply
-        run: terraform apply
+        run: terraform apply -auto-approve
 
       - name: Terraform Outputs
         id: lambda_output
         run: |
           lambda_name=$(terraform output -raw lambda_name)
-          echo "lambda_function_name=$lambda_name)" >> $GITHUB_ENV
           echo "lambda_function_name=$lambda_name)" >> "$GITHUB_OUTPUT"
     outputs:
       lambda_function_name: ${{ steps.lambda_output.outputs.uniqueVMActionsTag }}
