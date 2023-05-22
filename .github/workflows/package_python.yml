@@ -6,7 +6,7 @@ on:
       lambda_function_name:
         required: true
         type: string
-        default: "chatgpt_telegram"
+        default: "chatgpt-telegram"
   workflow_call:
     inputs:
       lambda_function_name:

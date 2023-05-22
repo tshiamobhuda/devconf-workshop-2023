@@ -19,8 +19,8 @@ jobs:
       - name: Generate State File Name
         run: |
           random_string=$(openssl rand -base64 12 | tr --delete '/')
-          state_file_name="${{ inputs.account }}-$random_string"
-          echo $state_file_name
+          state_file_name="devconf-$random_string"
+          echo "State File Name: $state_file_name"
           echo "STATEFILENAME=$state_file_name" >> $GITHUB_ENV
 
       - name: Setup Terraform
@@ -50,9 +50,9 @@ jobs:
         id: lambda_output
         run: |
           lambda_name=$(terraform output -raw lambda_name)
-          echo "lambda_function_name=$lambda_name)" >> "$GITHUB_OUTPUT"
+          echo "lambda_function_name=$lambda_name" >> "$GITHUB_OUTPUT"
     outputs:
-      lambda_function_name: ${{ steps.lambda_output.outputs.uniqueVMActionsTag }}
+      lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
   python_tests:
     needs: [terraform_deployment]
     uses: ./.github/workflows/test_python.yml
