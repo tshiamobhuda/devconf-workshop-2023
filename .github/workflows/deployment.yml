@@ -47,14 +47,14 @@ jobs:
           echo "lambda_function_name=$lambda_name)" >> $GITHUB_ENV
           echo "lambda_function_name=$lambda_name)" >> "$GITHUB_OUTPUT"
 
-    python_tests:
-      runs-on: ubuntu-latest
-      uses: ./.github/workflows/test_python.yml
-      secrets: inherit
+  python_tests:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/test_python.yml
+    secrets: inherit
 
-    python_deployment:
-      - name: Python Packaging and Deployment
-        uses: ./.github/workflows/package_python.yml
-        secrets: inherit
-        with:
-          lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
+  python_deployment:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/package_python.yml
+    secrets: inherit
+    with:
+      lambda_function_name: ${{ steps.lambda_output.outputs.lambda_function_name }}
