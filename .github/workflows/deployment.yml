@@ -30,6 +30,8 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
+        env:
+          TF_CLI_ARGS_init: "-backend-config='key=${{ env.lambda_function_name }}.tfstate'"
 
       - name: Terraform Validate
         id: validate
