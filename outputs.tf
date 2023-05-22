@@ -4,6 +4,6 @@
 ##
 
 output "lambda_name" {
-    value = module.chatgpt_telegram.lambda_name
+    value = module.chatgpt-telegram.lambda_name
     description = "The name of the created Lambda."
 }
