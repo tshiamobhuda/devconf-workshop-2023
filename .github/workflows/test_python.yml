@@ -1,5 +1,5 @@
 name: Python Test
-on: [workflow_dispatch]
+on: [workflow_dispatch, workflow_call]
 jobs:
   unit_test:
     runs-on: ubuntu-latest
