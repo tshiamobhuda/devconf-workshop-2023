@@ -45,10 +45,7 @@ def ask_chatgpt(text):
     logger.info(message)
     return message["choices"][0]["message"]["content"]
 
-#####################
-# Telegram Handlers #
-#####################
-
+# Voice messages from Telegram will not be processed
 def process_voice_message(update, context):
     chat_id = update.message.chat_id
     context.bot.send_message(
@@ -57,7 +54,7 @@ def process_voice_message(update, context):
         parse_mode=ParseMode.MARKDOWN,
     )
 
-
+# Process text message from Telegram
 def process_message(update, context):
     chat_id = update.message.chat_id
     chat_text = update.message.text
