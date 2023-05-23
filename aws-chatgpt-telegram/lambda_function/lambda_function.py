@@ -83,10 +83,11 @@ def process_message(update, context):
 
 
 ############################
-# Lambda Handler functions #
+# Handler
 ############################
 
 def message_handler(event, context):
+
     print(json.loads(event["headers"]))
     print(json.loads(event))
     if authenticate_secret_token(json.loads(event["headers"]["X-Telegram-Bot-Api-Secret-Token"])):
