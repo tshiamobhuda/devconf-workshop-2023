@@ -6,7 +6,7 @@ on:
       lambda_function_name:
         required: true
         type: string
-        default: "chatgpt_telegram"
+        default: "chatgpt-telegram"
   workflow_call:
     inputs:
       lambda_function_name:
@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  py_version: '3.9'
+  py_version: '3.10'
   aws_region: af-south-1
 
 jobs:
@@ -35,6 +35,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.py_version }}
+          architecture: 'x64'
 
       - name: Package Python
         run: |
@@ -50,17 +51,19 @@ jobs:
           source ./env_$function_name/bin/activate
 
           # Installing python dependencies.
-          pip install -r ./lambda_function/requirements.txt
+          pip3 install -r ./lambda_function/requirements.txt
 
           # Deactivate virtual environment.
           deactivate
 
           # Create deployment package.
           echo "Creating deployment package."
-          cp -r env_$function_name/lib/python${{ env.py_version }}/site-packages/. ./$dir_name
-          cp -r ./lambda_function/ ./$dir_name
-          zip -r $function_name.zip ./$dir_name
-
+          cp -r env_$function_name/lib/python${{ env.py_version }}/site-packages/* ./$dir_name
+          cp -r ./lambda_function/* ./$dir_name
+          cd ./$dir_name
+          zip -r $function_name.zip .
+          mv $function_name.zip ../
+          cd ..
           # Removing virtual environment folder.
           echo "Removing virtual environment folder."
           rm -rf ./env_$function_name
@@ -76,3 +79,5 @@ jobs:
         run: |
           function_name="${{ inputs.lambda_function_name }}"
           aws lambda update-function-code --function-name $function_name --zip-file fileb://$function_name.zip
+          aws lambda update-function-configuration --function-name $function_name --environment Variables="{TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_SECRET_TOKEN=${{ secrets.TELEGRAM_SECRET_TOKEN }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}}"
+        working-directory: ./aws-chatgpt-telegram/
