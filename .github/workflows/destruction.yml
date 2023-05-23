@@ -1,5 +1,6 @@
 name: Full Destruction
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
     inputs:
       terraform_state_file_name:
         required: true
