@@ -76,4 +76,5 @@ jobs:
         run: |
           function_name="${{ inputs.lambda_function_name }}"
           aws lambda update-function-code --function-name $function_name --zip-file fileb://$function_name.zip
+          aws lambda update-function-configuration --function-name $function_name --environment "Variables={TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_SECRET_TOKEN=${{ secrets.TELEGRAM_SECRET_TOKEN }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}}"
         working-directory: ./aws-chatgpt-telegram/
