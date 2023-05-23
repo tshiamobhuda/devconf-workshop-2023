@@ -31,12 +31,7 @@ def authenticate_secret_token(secret_token):
     else:
         return False
 
-
-#####################
-# Telegram Handlers #
-#####################
-
-
+# Forward message to chatgpt
 def ask_chatgpt(text):
     message = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -50,6 +45,9 @@ def ask_chatgpt(text):
     logger.info(message)
     return message["choices"][0]["message"]["content"]
 
+#####################
+# Telegram Handlers #
+#####################
 
 def process_voice_message(update, context):
     chat_id = update.message.chat_id
@@ -88,9 +86,7 @@ def process_message(update, context):
 
 def message_handler(event, context):
 
-    print(event["headers"])
-    print(event)
-    if authenticate_secret_token(event["headers"]["X-Telegram-Bot-Api-Secret-Token"]):
+    if authenticate_secret_token(event["headers"]["x-telegram-bot-api-secret-token"]):
         dispatcher.add_handler(MessageHandler(Filters.text, process_message))
         dispatcher.add_handler(MessageHandler(Filters.voice, process_voice_message))
 
@@ -102,5 +98,6 @@ def message_handler(event, context):
             return {"statusCode": 500}
 
         return {"statusCode": 200}
+    
     else:
         return {"statusCode": 403}
