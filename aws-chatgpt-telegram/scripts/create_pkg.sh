@@ -10,7 +10,7 @@ mkdir $dir_name
 # Set up some variables that will be used throughout the packaing process.
 
 function_name="chatgpt_telegram_package"
-runtime="python3.11"
+runtime="python3.10"
 
 # Create and activate virtual environment.
 virtualenv -t $runtime env_$function_name
