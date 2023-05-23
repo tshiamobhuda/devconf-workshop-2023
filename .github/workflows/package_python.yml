@@ -58,7 +58,7 @@ jobs:
 
           # Create deployment package.
           echo "Creating deployment package."
-          cp -r env_$function_name/lib/python${{ env.py_version }}/site-packages/* ./$dir_name
+          # cp -r env_$function_name/lib/python${{ env.py_version }}/site-packages/* ./$dir_name
           cp -r ./lambda_function/* ./$dir_name
           zip -r $function_name.zip ./$dir_name
 
