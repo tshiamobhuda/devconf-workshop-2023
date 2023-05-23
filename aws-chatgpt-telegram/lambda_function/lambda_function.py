@@ -88,9 +88,9 @@ def process_message(update, context):
 
 def message_handler(event, context):
 
-    print(json.loads(event["headers"]))
-    print(json.loads(event))
-    if authenticate_secret_token(json.loads(event["headers"]["X-Telegram-Bot-Api-Secret-Token"])):
+    print(event["headers"])
+    print(event)
+    if authenticate_secret_token(event["headers"]["X-Telegram-Bot-Api-Secret-Token"]):
         dispatcher.add_handler(MessageHandler(Filters.text, process_message))
         dispatcher.add_handler(MessageHandler(Filters.voice, process_voice_message))
 
