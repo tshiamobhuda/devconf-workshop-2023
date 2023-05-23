@@ -34,6 +34,15 @@ jobs:
         with:
           terraform_wrapper: false
 
+      - name: Create and populate terraform.tfvars file
+        run: |
+          rm -fr terraform.tfvars
+          touch terraform.tfvars
+          echo 'function_name = "${{ inputs.lambda_function_name }}"' >> terraform.tfvars
+          echo "" >> terraform.tfvars
+          cat terraform.tfvars
+        shell: bash
+
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
