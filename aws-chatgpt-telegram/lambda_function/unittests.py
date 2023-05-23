@@ -2,7 +2,7 @@ import unittest
 import os
 from unittest.mock import Mock, patch
 
-from app import (
+from lambda_function import (
     authenticate_secret_token,
     process_message,
     process_voice_message,
@@ -32,7 +32,7 @@ class YourTestCase(unittest.TestCase):
         mock_context = Mock()
 
         # Test the process_message function
-        with patch("app.ask_chatgpt") as mock_ask_chatgpt:
+        with patch("lambda_function.ask_chatgpt") as mock_ask_chatgpt:
             mock_ask_chatgpt.return_value = "Mock response"
             process_message(mock_update, mock_context)
 
