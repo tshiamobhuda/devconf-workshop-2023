@@ -7,3 +7,43 @@ on:
         type: string
 env:
   aws_region: af-south-1
+jobs:
+  terraform_deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ${{ env.aws_region }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+
+      - name: Create and populate terraform.tfvars file
+        run: |
+          rm -fr terraform.tfvars
+          touch terraform.tfvars
+          echo 'function_name = "placeholder"' >> terraform.tfvars
+          echo "" >> terraform.tfvars
+          cat terraform.tfvars
+        shell: bash
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+        env:
+          TF_CLI_ARGS_init: "-backend-config='key=${{ inputs.terraform_state_file_name }}'"
+
+      - name: Terraform Destroy Resource
+        run: terraform destroy --auto-approve
+
+      - name: Remove state file
+        run: aws s3 rm  s3://devconf-backend-configurations/${{ inputs.terraform_state_file_name }}
