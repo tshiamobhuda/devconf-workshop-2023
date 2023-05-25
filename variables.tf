@@ -3,6 +3,7 @@
 # Declares any of the required inputs for the deployment.
 ##
 
-# variable "function_name" {
-
-# }
+variable "function_name" {
+  type        = string
+  description = "Function name for lambda."
+}
